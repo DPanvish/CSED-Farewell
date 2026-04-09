@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, EffectFade } from 'swiper/modules';
+import { Navigation, Pagination, Keyboard, EffectFade, Autoplay } from 'swiper/modules';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ArrowLeft, ArrowRight, Camera, Play } from 'lucide-react';
@@ -104,13 +104,18 @@ const GroupMemories = () => {
         )}
 
         <Swiper
-          modules={[Navigation, Pagination, Keyboard, EffectFade]}
+          modules={[Navigation, Pagination, Keyboard, EffectFade, Autoplay]}
           effect="fade" 
           fadeEffect={{ crossFade: true }}
           speed={700}
           spaceBetween={0}
           slidesPerView={1}
           centeredSlides={true}
+          autoplay={{
+            delay: 3500,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
           grabCursor={true}
           keyboard={{ enabled: true }}
           navigation={{

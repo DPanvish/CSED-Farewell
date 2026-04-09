@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, EffectFade } from 'swiper/modules';
+import { Navigation, Pagination, Keyboard, Autoplay } from 'swiper/modules';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ArrowLeft, ArrowRight, CornerDownLeft } from 'lucide-react';
@@ -9,7 +9,6 @@ import { studentsData } from '../data/studentsData';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import 'swiper/css/effect-fade';
 
 const animateCardReset = (card) => {
   gsap.to(card, {
@@ -73,7 +72,7 @@ const ImmersiveHallOfFame = () => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const bgContainer = componentRef.current?.querySelector(".vortex-bg");
     if (bgContainer && bgContainer.children.length === 0) {
-      const maxBackgroundPortraits = prefersReducedMotion ? 0 : window.innerWidth < 768 ? 6 : 12;
+      const maxBackgroundPortraits = prefersReducedMotion ? 0 : window.innerWidth < 768 ? 0 : 4;
       const bgStudents = [...studentsData].sort(() => 0.5 - Math.random()).slice(0, maxBackgroundPortraits);
       bgStudents.forEach((student, i) => {
         const img = document.createElement("img");
@@ -129,12 +128,16 @@ const ImmersiveHallOfFame = () => {
 
       <div className="flex-1 w-full relative z-10 flex flex-col justify-center pb-24 md:pb-32 px-4 md:px-12">
         <Swiper
-          modules={[Navigation, Pagination, Keyboard, EffectFade]}
-          effect="fade" 
-          fadeEffect={{ crossFade: true }}
-          spaceBetween={50}
+          modules={[Navigation, Pagination, Keyboard, Autoplay]}
+          speed={450}
+          spaceBetween={24}
           slidesPerView={1}
           centeredSlides={true}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
           grabCursor={true}
           keyboard={{ enabled: true }}
           navigation={{
@@ -174,23 +177,14 @@ const ImmersiveHallOfFame = () => {
                 
                 <img 
                   src={student.image} 
-                  alt="background blur" 
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority={index === 0 ? 'high' : 'low'}
-                  className="absolute inset-0 w-full h-full object-cover opacity-30 blur-[24px] scale-105 saturate-125 transition-opacity duration-700 md:group-hover:opacity-45"
-                  aria-hidden="true"
-                />
-                <img 
-                  src={student.image} 
                   alt={student.name} 
                   loading="lazy"
                   decoding="async"
                   fetchPriority={index === 0 ? 'high' : 'low'}
-                  className="absolute inset-0 w-full h-full object-contain object-bottom opacity-80 mix-blend-luminosity md:group-hover:mix-blend-normal md:group-hover:scale-[1.02] md:group-hover:opacity-100 transition-all duration-700 ease-out z-0"
+                  className="absolute inset-0 w-full h-full object-contain object-bottom opacity-95 grayscale md:group-hover:grayscale-0 md:group-hover:scale-[1.01] transition-[filter,transform] duration-500 ease-out z-0"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-95 transition-opacity duration-700 md:group-hover:opacity-80" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent opacity-90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-transparent opacity-95" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/25 to-transparent opacity-90" />
 
                 <div className="absolute bottom-0 left-0 w-full p-6 sm:p-10 md:p-14 lg:p-20 flex flex-col items-start text-left z-20">
                   
