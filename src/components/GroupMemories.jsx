@@ -33,7 +33,7 @@ const photoFiles = [
   'img20.jpeg',
 ];
 
-const videoFiles = ['vid1.MOV', 'vid2.MOV', 'vid3.MOV'];
+const videoFiles = ['vid1.mp4', 'vid2.mp4', 'vid3.mp4'];
 
 const memoriesData = [
   ...photoFiles.map((fileName) => ({

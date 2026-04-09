@@ -1,74 +1,76 @@
 const placeholder = "https://via.placeholder.com/150";
 const asset = (fileName) => `/assets/${fileName}`;
-const img502 = asset("502.png");
-const img503 = asset("503.png");
-const img504 = asset("504.png");
-const img505 = asset("505.png");
-const img506 = asset("506.png");
-const img507 = asset("507.png");
-const img508 = asset("508.png");
-const img509 = asset("509.png");
-const img510 = asset("510.png");
-const img511 = asset("511.png");
-const img512 = asset("512.png");
-const img513 = asset("513.png");
-const img514 = asset("514.png");
-const img515 = asset("515.png");
-const img516 = asset("516.png");
-const img517 = asset("517.png");
-const img518 = asset("518.png");
-const img519 = asset("519.png");
-const img520 = asset("520.png");
-const img521 = asset("521.png");
-const img522 = asset("522.png");
-const img523 = asset("523.png");
-const img524 = asset("524.png");
-const img525 = asset("525.png");
-const img526 = asset("526.png");
-const img527 = asset("527.png");
-const img528 = asset("528.png");
-const img529 = asset("529.png");
-const img530 = asset("530.png");
-const img531 = asset("531.png");
-const img532 = asset("532.png");
-const img533 = asset("533.png");
-const img534 = asset("534.png");
-const img535 = asset("535.png");
-const img536 = asset("536.png");
-const img537 = asset("537.png");
-const img538 = asset("538.png");
-const img539 = asset("539.png");
-const img541 = asset("541.png");
-const img542 = asset("542.png");
-const img543 = asset("543.png");
-const img544 = asset("544.png");
-const img545 = asset("545.png");
-const img546 = asset("546.png");
-const img547 = asset("547.png");
-const img548 = asset("548.png");
-const img549 = asset("549.png");
-const img550 = asset("550.png");
-const img551 = asset("551.png");
-const img552 = asset("552.png");
-const img553 = asset("553.png");
-const img554 = asset("554.png");
-const img555 = asset("555.png");
-const img556 = asset("556.png");
-const img557 = asset("557.png");
-const img558 = asset("558.png");
-const img559 = asset("559.png");
-const img560 = asset("560.png");
-const img561 = asset("561.png");
-const img562 = asset("562.png");
-const img563 = asset("563.png");
-const img564 = asset("564.png");
-const img565 = asset("565.png");
-const imgl501 = asset("l501.png");
-const imgl503 = asset("l503.png");
-const imgl504 = asset("l504.png");
-const imgl505 = asset("l505.png");
-const imgl506 = asset("l506.png");
-const imgl507 = asset("l507.png");
+const [
+  img502,
+  img503,
+  img504,
+  img505,
+  img506,
+  img507,
+  img508,
+  img509,
+  img510,
+  img511,
+  img512,
+  img513,
+  img514,
+  img515,
+  img516,
+  img517,
+  img518,
+  img519,
+  img520,
+  img521,
+  img522,
+  img523,
+  img524,
+  img525,
+  img526,
+  img527,
+  img528,
+  img529,
+  img530,
+  img531,
+  img532,
+  img533,
+  img534,
+  img535,
+  img536,
+  img537,
+  img538,
+  img539,
+  img541,
+  img542,
+  img543,
+  img544,
+  img545,
+  img546,
+  img547,
+  img548,
+  img549,
+  img550,
+  img551,
+  img552,
+  img553,
+  img554,
+  img555,
+  img556,
+  img557,
+  img558,
+  img559,
+  img560,
+  img561,
+  img562,
+  img563,
+  img564,
+  img565,
+  imgl501,
+  imgl503,
+  imgl504,
+  imgl505,
+  imgl506,
+  imgl507,
+] = Array.from({ length: 69 }, (_, index) => asset(`${index + 1}.png`));
 
 export const studentsData = [
   { id: 1, rollNo: "223J1A0502", name: "ALLIPALLI JEEVESH SRINIVAS", tag: "THE KING", image: img502, quote: "Everything is possible if you do hard work and stay consistent." },
