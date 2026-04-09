@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Keyboard, EffectFade } from 'swiper/modules';
 import gsap from 'gsap';
@@ -25,6 +25,8 @@ const handleCardPointerMove = (event) => {
   if (event.pointerType !== 'mouse') return;
 
   const card = event.currentTarget;
+  if (card.__tiltFrame) return;
+
   const rect = card.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
@@ -33,13 +35,18 @@ const handleCardPointerMove = (event) => {
   const rotateX = ((y - centerY) / centerY) * -3;
   const rotateY = ((x - centerX) / centerX) * 3;
 
-  gsap.to(card, {
-    rotateX,
-    rotateY,
-    scale: 1.01,
-    duration: 0.5,
-    ease: "power2.out",
-    transformPerspective: 1500,
+  card.__tiltFrame = requestAnimationFrame(() => {
+    card.__tiltFrame = null;
+
+    gsap.to(card, {
+      rotateX,
+      rotateY,
+      scale: 1.01,
+      duration: 0.35,
+      ease: "power2.out",
+      transformPerspective: 1500,
+      overwrite: 'auto',
+    });
   });
 };
 
@@ -55,6 +62,7 @@ const handleCardPointerDown = (event) => {
 
 const ImmersiveHallOfFame = () => {
   const componentRef = useRef();
+  const breatheAnimation = useRef(null);
 
   useGSAP(() => {
     gsap.fromTo(".swiper-slide-active .student-card-inner", 
@@ -62,12 +70,16 @@ const ImmersiveHallOfFame = () => {
       { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "power4.out" }
     );
 
-    const bgContainer = document.querySelector(".vortex-bg");
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const bgContainer = componentRef.current?.querySelector(".vortex-bg");
     if (bgContainer && bgContainer.children.length === 0) {
-      const bgStudents = [...studentsData].sort(() => 0.5 - Math.random()).slice(0, 30);
+      const maxBackgroundPortraits = prefersReducedMotion ? 0 : window.innerWidth < 768 ? 6 : 12;
+      const bgStudents = [...studentsData].sort(() => 0.5 - Math.random()).slice(0, maxBackgroundPortraits);
       bgStudents.forEach((student, i) => {
         const img = document.createElement("img");
         img.src = student.image;
+        img.loading = "lazy";
+        img.decoding = "async";
         img.className = "absolute w-12 h-12 md:w-20 md:h-20 rounded-full opacity-0 object-cover border border-white/5 grayscale blur-[2px]";
         bgContainer.appendChild(img);
 
@@ -81,15 +93,19 @@ const ImmersiveHallOfFame = () => {
           {
             opacity: gsap.utils.random(0.01, 0.04), 
             z: 300, 
-            duration: gsap.utils.random(20, 35), 
+            duration: gsap.utils.random(24, 36), 
             repeat: -1,
-            delay: i * 0.3,
+            delay: i * 0.2,
             ease: "none",
           }
         );
       });
     }
   }, { scope: componentRef });
+
+  useEffect(() => () => {
+    if (breatheAnimation.current) breatheAnimation.current.kill();
+  }, []);
 
   return (
     <div ref={componentRef} className="relative w-full min-h-[100dvh] bg-black overflow-hidden font-inter flex flex-col">
@@ -144,7 +160,7 @@ const ImmersiveHallOfFame = () => {
           }}
           className="w-full h-full max-w-[1400px] aspect-[4/5] md:aspect-[4/3] lg:aspect-[16/9] max-h-[85vh]"
         >
-          {studentsData.map((student) => (
+          {studentsData.map((student, index) => (
             <SwiperSlide key={student.id} className="flex items-center justify-center p-2">
                 
               <div 
@@ -160,16 +176,18 @@ const ImmersiveHallOfFame = () => {
                   src={student.image} 
                   alt="background blur" 
                   loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover opacity-40 blur-[50px] scale-110 saturate-150 transition-opacity duration-[1.5s] md:group-hover:opacity-60"
+                  decoding="async"
+                  fetchPriority={index === 0 ? 'high' : 'low'}
+                  className="absolute inset-0 w-full h-full object-cover opacity-30 blur-[24px] scale-105 saturate-125 transition-opacity duration-700 md:group-hover:opacity-45"
                   aria-hidden="true"
                 />
                 <img 
                   src={student.image} 
                   alt={student.name} 
                   loading="lazy"
-                  // Notice we use object-contain and object-right-bottom (or object-center) here
-                  className="absolute inset-0 w-full h-full object-contain object-bottom opacity-70 mix-blend-luminosity md:group-hover:mix-blend-normal md:group-hover:scale-105 md:group-hover:opacity-100 transition-all duration-[1.5s] ease-out z-0"
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/1600x900?text=Portrait+Missing' }}
+                  decoding="async"
+                  fetchPriority={index === 0 ? 'high' : 'low'}
+                  className="absolute inset-0 w-full h-full object-contain object-bottom opacity-80 mix-blend-luminosity md:group-hover:mix-blend-normal md:group-hover:scale-[1.02] md:group-hover:opacity-100 transition-all duration-700 ease-out z-0"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-95 transition-opacity duration-700 md:group-hover:opacity-80" />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent opacity-90" />

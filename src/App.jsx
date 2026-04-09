@@ -1,12 +1,13 @@
-import { useRef } from 'react';
+import { Suspense, lazy, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { ChevronDown, Camera, Users, Heart } from 'lucide-react';
 
 import GroupMemories from './components/GroupMemories';
-import ImmersiveHallOfFame from './components/ImmersiveHallOfFame';
 import BackgroundMusic from './components/BackgroundMusic';
+
+const ImmersiveHallOfFame = lazy(() => import('./components/ImmersiveHallOfFame'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -109,13 +110,12 @@ function App() {
     
     swiperSections.forEach((section) => {
         gsap.to(section, {
-            scale: 0.9,
-            opacity: 0,
-            filter: "blur(20px)",
+            scale: 0.97,
+            opacity: 0.35,
             ease: "none",
             scrollTrigger: {
                 trigger: section,
-                start: "bottom 90%", // Triggers right as you leave the bottom of the swiper
+                start: "bottom 98%",
                 end: "bottom top",
                 scrub: true
             }
@@ -223,7 +223,20 @@ function App() {
 
       {/* 3. HALL OF FAME COMPONENT */}
       <section className="swiper-section-wrapper relative w-full z-10 bg-black">
-        <ImmersiveHallOfFame />
+        <Suspense
+          fallback={
+            <div className="min-h-[100dvh] w-full bg-black flex items-center justify-center text-center px-6">
+              <div>
+                <h3 className="text-3xl md:text-5xl font-space font-bold text-white">Loading Hall of Fame...</h3>
+                <p className="mt-4 text-sm md:text-base text-white/50 font-mono tracking-[0.2em] uppercase">
+                  Preparing portraits
+                </p>
+              </div>
+            </div>
+          }
+        >
+          <ImmersiveHallOfFame />
+        </Suspense>
       </section>
 
       {/* --------------------------------------------------------- */}
