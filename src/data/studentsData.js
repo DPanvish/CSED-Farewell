@@ -73,7 +73,7 @@ const [
 ] = Array.from({ length: 69 }, (_, index) => asset(`${index + 1}.png`));
 
 export const studentsData = [
-  { id: 1, rollNo: "223J1A0502", name: "ALLIPALLI JEEVESH SRINIVAS", tag: "The King", image: img502, quote: "Everything is possible if you do hard work and stay consistent." },
+  { id: 1, rollNo: "223J1A0502", name: "ALLIPALLI JEEVESH SRINIVAS", tag: "The Trailblazer King", image: img502, quote: "Everything is possible if you do hard work and stay consistent." },
   { id: 2, rollNo: "223J1A0503", name: "ALLU TARAKESWARI", tag: "The Quiet Storm", image: img503, quote: "The best way to predict the future is to invent it." },
   { id: 3, rollNo: "223J1A0504", name: "AMARA SATHEESH", tag: "The Dream Chaser", image: img504, quote: "We didn't just write code; we wrote the first chapter of our careers." },
   { id: 4, rollNo: "223J1A0505", name: "AMBUJALAPU SIVA MANIKANTA", tag: "The Firestarter", image: img505, quote: "Dream big, work hard, stay focused, and surround yourself with good people." },

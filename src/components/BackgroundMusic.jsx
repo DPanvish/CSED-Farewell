@@ -6,7 +6,21 @@ const BackgroundMusic = () => {
   const [hasInteracted, setHasInteracted] = useState(false);
   const audioRef = useRef(null);
 
-  // Attempt to play audio on the very first click anywhere on the page
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.4;
+    audio.play()
+      .then(() => {
+        setIsPlaying(true);
+        setHasInteracted(true);
+      })
+      .catch(() => {
+        // Browsers often block unmuted autoplay until the user interacts.
+      });
+  }, []);
+
   useEffect(() => {
     const handleFirstInteraction = () => {
       if (!hasInteracted && audioRef.current) {
@@ -47,7 +61,7 @@ const BackgroundMusic = () => {
       {/* Replace the src with your actual audio file path. 
         Put your audio file in the public folder (e.g., public/farewell-theme.mp3)
       */}
-      <audio ref={audioRef} src="/farewell-theme.mp3" loop />
+      <audio ref={audioRef} src="/farewell-theme.mp3" loop autoPlay />
 
       <button
         onClick={toggleMute}

@@ -181,7 +181,7 @@ const ImmersiveHallOfFame = () => {
                   loading="lazy"
                   decoding="async"
                   fetchPriority={index === 0 ? 'high' : 'low'}
-                  className="absolute inset-0 w-full h-full object-contain object-bottom opacity-95 grayscale md:group-hover:grayscale-0 md:group-hover:scale-[1.01] transition-[filter,transform] duration-500 ease-out z-0"
+                  className="absolute inset-0 w-full h-full object-contain object-bottom opacity-95 md:grayscale md:group-hover:grayscale-0 md:group-hover:scale-[1.01] transition-[filter,transform] duration-500 ease-out z-0"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-transparent opacity-95" />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/25 to-transparent opacity-90" />
