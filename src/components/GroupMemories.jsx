@@ -54,6 +54,7 @@ const memoriesData = [
 const GroupMemories = () => {
   const componentRef = useRef();
   const swiperRef = useRef(null);
+  const observerRef = useRef(null);
   const [activeBg, setActiveBg] = useState(
     memoriesData.find((memory) => memory.type === 'image')?.src || ''
   );
@@ -72,26 +73,32 @@ const GroupMemories = () => {
   useEffect(() => {
     const section = componentRef.current;
     const swiper = swiperRef.current;
-    if (!section || !swiper?.autoplay) return;
+    const autoplay = swiper?.autoplay;
+    if (!section || !autoplay) return;
 
-    swiper.autoplay.stop();
+    const updateAutoplay = (isVisible) => {
+      if (!swiper.initialized || !swiper.params.autoplay) return;
 
-    const observer = new IntersectionObserver(
+      if (isVisible) {
+        autoplay.start?.();
+      } else {
+        autoplay.stop?.();
+      }
+    };
+
+    observerRef.current = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          swiper.autoplay.start();
-        } else {
-          swiper.autoplay.stop();
-        }
+        updateAutoplay(entry.isIntersecting);
       },
       { threshold: 0.45 }
     );
 
-    observer.observe(section);
+    observerRef.current.observe(section);
 
     return () => {
-      observer.disconnect();
-      swiper.autoplay.stop();
+      observerRef.current?.disconnect();
+      observerRef.current = null;
+      updateAutoplay(false);
     };
   }, []);
 
@@ -134,6 +141,10 @@ const GroupMemories = () => {
           onSwiper={(swiper) => {
             swiperRef.current = swiper;
           }}
+          onInit={(swiper) => {
+            swiperRef.current = swiper;
+            swiper.autoplay?.stop?.();
+          }}
           modules={[Navigation, Pagination, Keyboard, EffectFade, Autoplay]}
           effect="fade" 
           fadeEffect={{ crossFade: true }}
@@ -145,6 +156,7 @@ const GroupMemories = () => {
             delay: 3500,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
+            enabled: true,
           }}
           grabCursor={true}
           keyboard={{ enabled: true }}

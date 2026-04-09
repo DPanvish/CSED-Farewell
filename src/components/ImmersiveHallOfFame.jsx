@@ -63,6 +63,7 @@ const ImmersiveHallOfFame = () => {
   const componentRef = useRef();
   const breatheAnimation = useRef(null);
   const swiperRef = useRef(null);
+  const observerRef = useRef(null);
 
   useGSAP(() => {
     gsap.fromTo(".swiper-slide-active .student-card-inner", 
@@ -110,26 +111,32 @@ const ImmersiveHallOfFame = () => {
   useEffect(() => {
     const section = componentRef.current;
     const swiper = swiperRef.current;
-    if (!section || !swiper?.autoplay) return;
+    const autoplay = swiper?.autoplay;
+    if (!section || !autoplay) return;
 
-    swiper.autoplay.stop();
+    const updateAutoplay = (isVisible) => {
+      if (!swiper.initialized || !swiper.params.autoplay) return;
 
-    const observer = new IntersectionObserver(
+      if (isVisible) {
+        autoplay.start?.();
+      } else {
+        autoplay.stop?.();
+      }
+    };
+
+    observerRef.current = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          swiper.autoplay.start();
-        } else {
-          swiper.autoplay.stop();
-        }
+        updateAutoplay(entry.isIntersecting);
       },
       { threshold: 0.45 }
     );
 
-    observer.observe(section);
+    observerRef.current.observe(section);
 
     return () => {
-      observer.disconnect();
-      swiper.autoplay.stop();
+      observerRef.current?.disconnect();
+      observerRef.current = null;
+      updateAutoplay(false);
     };
   }, []);
 
@@ -158,6 +165,10 @@ const ImmersiveHallOfFame = () => {
           onSwiper={(swiper) => {
             swiperRef.current = swiper;
           }}
+          onInit={(swiper) => {
+            swiperRef.current = swiper;
+            swiper.autoplay?.stop?.();
+          }}
           modules={[Navigation, Pagination, Keyboard, Autoplay]}
           speed={450}
           spaceBetween={24}
@@ -167,6 +178,7 @@ const ImmersiveHallOfFame = () => {
             delay: 4000,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
+            enabled: true,
           }}
           grabCursor={true}
           keyboard={{ enabled: true }}
@@ -197,7 +209,7 @@ const ImmersiveHallOfFame = () => {
             <SwiperSlide key={student.id} className="flex items-center justify-center p-2">
                 
               <div 
-                className="student-card-inner relative w-full h-full bg-zinc-900 rounded-[2rem] md:rounded-[3rem] overflow-hidden group shadow-[0_0_80px_rgba(0,0,0,0.8)] border border-white/10"
+                className="student-card-inner relative flex h-full w-full flex-col bg-zinc-900 rounded-[2rem] md:rounded-[3rem] overflow-hidden group shadow-[0_0_80px_rgba(0,0,0,0.8)] border border-white/10 md:block"
                 onPointerMove={handleCardPointerMove}
                 onPointerLeave={(e) => animateCardReset(e.currentTarget)}
                 onPointerDown={handleCardPointerDown}
@@ -205,35 +217,37 @@ const ImmersiveHallOfFame = () => {
                 onPointerCancel={(e) => animateCardReset(e.currentTarget)}
               >
                 
-                <img 
-                  src={student.image} 
-                  alt={student.name} 
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority={index === 0 ? 'high' : 'low'}
-                  className="absolute inset-0 w-full h-full object-contain object-bottom opacity-95 md:grayscale md:group-hover:grayscale-0 md:group-hover:scale-[1.01] transition-[filter,transform] duration-500 ease-out z-0"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-transparent opacity-95" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/25 to-transparent opacity-90" />
+                <div className="relative h-[52%] w-full overflow-hidden bg-black md:absolute md:inset-0 md:h-full">
+                  <img 
+                    src={student.image} 
+                    alt={student.name} 
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority={index === 0 ? 'high' : 'low'}
+                    className="absolute inset-0 w-full h-full object-contain object-bottom opacity-95 md:grayscale md:group-hover:grayscale-0 md:group-hover:scale-[1.01] transition-[filter,transform] duration-500 ease-out z-0"
+                  />
+                  <div className="absolute inset-0 hidden md:block bg-gradient-to-t from-black via-black/55 to-transparent opacity-95" />
+                  <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-black/80 via-black/25 to-transparent opacity-90" />
+                </div>
 
-                <div className="absolute bottom-0 left-0 w-full p-6 sm:p-10 md:p-14 lg:p-20 flex flex-col items-start text-left z-20">
+                <div className="relative z-20 mt-auto w-full flex flex-col items-start text-left bg-black px-5 py-6 sm:px-6 sm:py-7 md:absolute md:bottom-0 md:left-0 md:bg-transparent md:p-14 lg:p-20">
                   
                   <span className="mb-4 sm:mb-6 font-mono text-xs md:text-sm tracking-[0.3em] text-blue-300 border border-blue-400/30 px-5 py-2 rounded-full bg-blue-950/40 backdrop-blur-md shadow-lg flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
                     {student.rollNo}
                   </span>
                   
-                  <h3 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-space font-bold text-white tracking-tighter leading-[0.9] mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] break-words max-w-[90%]">
+                  <h3 className="text-2xl sm:text-4xl md:text-7xl lg:text-8xl font-space font-bold text-white tracking-tighter leading-[0.95] mb-3 md:mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] break-words max-w-[90%]">
                     {student.name}
                   </h3>
                   
-                  <p className="text-lg md:text-2xl lg:text-3xl font-inter font-light text-blue-200/80 italic mb-8 sm:mb-12 drop-shadow-lg max-w-3xl">
+                  <p className="text-base sm:text-lg md:text-2xl lg:text-3xl font-inter font-light text-blue-200/80 italic mb-5 sm:mb-7 md:mb-12 drop-shadow-lg max-w-3xl">
                     "{student.tag}"
                   </p>
 
-                  <div className="student-quote w-full max-w-4xl border-l-4 border-blue-500 pl-6 md:pl-8 py-2 relative">
+                  <div className="student-quote w-full max-w-4xl border-l-4 border-blue-500 pl-4 sm:pl-5 md:pl-8 py-2 relative">
                     <span className="absolute -top-6 -left-2 text-6xl text-white/5 font-serif select-none pointer-events-none">"</span>
-                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-light leading-relaxed tracking-wide shadow-black drop-shadow-md">
+                    <p className="text-sm sm:text-base md:text-xl lg:text-2xl text-gray-300 font-light leading-relaxed tracking-wide shadow-black drop-shadow-md">
                       {student.quote || "Code your own destiny."} 
                     </p>
                   </div>
