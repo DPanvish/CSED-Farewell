@@ -142,10 +142,10 @@ export const studentsData = [
   { id: 61, rollNo: "223J1A0563", name: "GOGINENI SHIVADEEP", tag: "The Out-of-the-Box", image: img563, quote: "Think outside the box model." },
   { id: 62, rollNo: "223J1A0564", name: "GOLLAPALLI VINAY SAI", tag: "The Fearless Step", image: img564, quote: "Embrace the unknown." },
   { id: 63, rollNo: "223J1A0565", name: "GOLLAVILLI KARTHIK", tag: "The Visual Poet", image: img565, quote: "Design is thinking made visual." },
-  { id: 64, rollNo: "233J5A0501", name: "Student Sixty Five", tag: "The Action Taker", image: imgl501, quote: "Less talk, more action." },
-  { id: 65, rollNo: "233J5A0503", name: "Student Sixty Seven", tag: "The Better Every Day", image: imgl503, quote: "Continuous improvement is better than delayed perfection." },
-  { id: 66, rollNo: "233J5A0504", name: "Student Sixty Eight", tag: "The First Mover", image: imgl504, quote: "First solve the problem, then write the code." },
-  { id: 67, rollNo: "233J5A0505", name: "Student Sixty Nine", tag: "The Simple Soul", image: imgl505, quote: "Simplicity is the soul of efficiency." },
-  { id: 68, rollNo: "233J5A0506", name: "Student Seventy", tag: "The Turning Point", image: imgl506, quote: "Every exit is an entry somewhere else." },
-  { id: 69, rollNo: "233J5A0507", name: "Student Seventy One", tag: "The Empire Builder", image: imgl507, quote: "End of an era, beginning of an empire." }
+  { id: 64, rollNo: "233J5A0501", name: "BEESETTI LOHITH KUMAR", tag: "The Action Taker", image: imgl501, quote: "Less talk, more action." },
+  { id: 65, rollNo: "233J5A0503", name: "CHAKKA INDHRAVATI", tag: "The Better Every Day", image: imgl503, quote: "Continuous improvement is better than delayed perfection." },
+  { id: 66, rollNo: "233J5A0504", name: "CHIKKALA HARIKA", tag: "The First Mover", image: imgl504, quote: "First solve the problem, then write the code." },
+  { id: 67, rollNo: "233J5A0505", name: "DUDDU LOKESH", tag: "The Simple Soul", image: imgl505, quote: "Simplicity is the soul of efficiency." },
+  { id: 68, rollNo: "233J5A0506", name: "DWARAPUREDDY SANDEEP", tag: "The Turning Point", image: imgl506, quote: "Every exit is an entry somewhere else." },
+  { id: 69, rollNo: "233J5A0507", name: "GOLAJANA KAVYA", tag: "The Empire Builder", image: imgl507, quote: "End of an era, beginning of an empire." }
 ];

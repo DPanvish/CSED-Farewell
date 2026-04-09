@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Keyboard, EffectFade, Autoplay } from 'swiper/modules';
 import gsap from 'gsap';
@@ -53,6 +53,7 @@ const memoriesData = [
 
 const GroupMemories = () => {
   const componentRef = useRef();
+  const swiperRef = useRef(null);
   const [activeBg, setActiveBg] = useState(
     memoriesData.find((memory) => memory.type === 'image')?.src || ''
   );
@@ -67,6 +68,32 @@ const GroupMemories = () => {
       { opacity: 1, scale: 1, duration: 0.9, ease: "power3.out" }
     );
   }, { scope: componentRef });
+
+  useEffect(() => {
+    const section = componentRef.current;
+    const swiper = swiperRef.current;
+    if (!section || !swiper?.autoplay) return;
+
+    swiper.autoplay.stop();
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          swiper.autoplay.start();
+        } else {
+          swiper.autoplay.stop();
+        }
+      },
+      { threshold: 0.45 }
+    );
+
+    observer.observe(section);
+
+    return () => {
+      observer.disconnect();
+      swiper.autoplay.stop();
+    };
+  }, []);
 
   return (
     <div ref={componentRef} className="relative w-full min-h-[100dvh] bg-black overflow-hidden font-inter flex flex-col pt-10">
@@ -104,6 +131,9 @@ const GroupMemories = () => {
         )}
 
         <Swiper
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
           modules={[Navigation, Pagination, Keyboard, EffectFade, Autoplay]}
           effect="fade" 
           fadeEffect={{ crossFade: true }}

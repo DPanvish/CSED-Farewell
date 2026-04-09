@@ -62,6 +62,7 @@ const handleCardPointerDown = (event) => {
 const ImmersiveHallOfFame = () => {
   const componentRef = useRef();
   const breatheAnimation = useRef(null);
+  const swiperRef = useRef(null);
 
   useGSAP(() => {
     gsap.fromTo(".swiper-slide-active .student-card-inner", 
@@ -106,6 +107,32 @@ const ImmersiveHallOfFame = () => {
     if (breatheAnimation.current) breatheAnimation.current.kill();
   }, []);
 
+  useEffect(() => {
+    const section = componentRef.current;
+    const swiper = swiperRef.current;
+    if (!section || !swiper?.autoplay) return;
+
+    swiper.autoplay.stop();
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          swiper.autoplay.start();
+        } else {
+          swiper.autoplay.stop();
+        }
+      },
+      { threshold: 0.45 }
+    );
+
+    observer.observe(section);
+
+    return () => {
+      observer.disconnect();
+      swiper.autoplay.stop();
+    };
+  }, []);
+
   return (
     <div ref={componentRef} className="relative w-full min-h-[100dvh] bg-black overflow-hidden font-inter flex flex-col">
       
@@ -128,6 +155,9 @@ const ImmersiveHallOfFame = () => {
 
       <div className="flex-1 w-full relative z-10 flex flex-col justify-center pb-24 md:pb-32 px-4 md:px-12">
         <Swiper
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
           modules={[Navigation, Pagination, Keyboard, Autoplay]}
           speed={450}
           spaceBetween={24}
